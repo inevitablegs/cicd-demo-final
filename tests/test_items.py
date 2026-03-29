@@ -58,12 +58,13 @@ def test_list_items(client: TestClient):
     assert len(resp.json()) == 2
 
 
+
 def test_update_item_rejects_zero_id(client: TestClient):
-    # Intentionally fails with current code: the update endpoint does not apply
-    # verify_positive_id, so id=0 is treated as "not found" (404) instead of
-    # being rejected as invalid input (400).
+    # Validate input before querying the database
+    id_to_test = 0
+    assert not verify_positive_id(id_to_test)
     resp = client.put(
-        "/items/0",
+        f"/items/{id_to_test}",
         json={"name": "x", "price": 1.0, "in_stock": True},
     )
     assert resp.status_code == 400
