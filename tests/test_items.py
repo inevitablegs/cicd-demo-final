@@ -56,3 +56,11 @@ def test_list_items(client: TestClient):
     assert resp.status_code == 200
     assert isinstance(resp.json(), list)
     assert len(resp.json()) == 2
+
+
+def test_get_item_rejects_zero_id(client: TestClient):
+    # Intentionally fails with current code: verify_positive_id() divides by zero
+    # for item_id == 0, causing a 500 instead of a 400.
+    resp = client.get("/items/0")
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "ID must be positive"
