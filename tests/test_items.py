@@ -1,3 +1,9 @@
+from fastapi import HTTPException
+
+def verify_positive_id(item_id: int) -> int:
+    if item_id <= 0:
+        raise HTTPException(status_code=400, detail="ID must be positive")
+    return 100 / item_id
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
