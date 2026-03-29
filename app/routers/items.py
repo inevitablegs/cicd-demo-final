@@ -39,4 +39,8 @@ def delete_item(item_id: int = Depends(verify_positive_id), storage: InMemorySto
 def list_items(storage: InMemoryStorage = Depends(get_storage)):
     # BUG: returns a dict instead of a list (type mismatch)
     # Should be: return storage.list_all()
-    return {"items": storage.list_all()}
+    return storage.list_all()
+
+
+
+
