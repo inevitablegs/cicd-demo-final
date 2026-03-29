@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 
-class Item(BaseModel):
-    id: int
+class ItemCreate(BaseModel):
     name: str
-    price: float
+    price: float    # intentionally correct type, but we'll break later
+    in_stock: bool
+
+class ItemResponse(ItemCreate):
+    id: int
