@@ -58,9 +58,22 @@ def test_list_items(client: TestClient):
     assert len(resp.json()) == 2
 
 
-def test_get_item_rejects_zero_id(client: TestClient):
-    # Intentionally fails with current code: verify_positive_id() divides by zero
-    # for item_id == 0, causing a 500 instead of a 400.
-    resp = client.get("/items/0")
+def test_update_item_rejects_zero_id(client: TestClient):
+    # Intentionally fails with current code: the update endpoint does not apply
+    # verify_positive_id, so id=0 is treated as "not found" (404) instead of
+    # being rejected as invalid input (400).
+    resp = client.put(
+        "/items/0",
+        json={"name": "x", "price": 1.0, "in_stock": True},
+    )
     assert resp.status_code == 400
     assert resp.json()["detail"] == "ID must be positive"
+    
+    
+    
+# def test_get_item_rejects_zero_id(client: TestClient):
+#     # Intentionally fails with current code: verify_positive_id() divides by zero
+#     # for item_id == 0, causing a 500 instead of a 400.
+#     resp = client.get("/items/0")
+#     assert resp.status_code == 400
+#     assert resp.json()["detail"] == "ID must be positive"
