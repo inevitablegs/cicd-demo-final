@@ -17,10 +17,12 @@ class InMemoryStorage:
         return self._items.get(item_id)
 
     def update(self, item_id: int, item: ItemCreate) -> Optional[ItemResponse]:
-        # BUG: does not actually update the stored item
-        # Should be: self._items[item_id] = ItemResponse(id=item_id, **item.model_dump())
-        # But currently returns old item without saving
-        return self._items.get(item_id)
+        if item_id not in self._items:
+            return None
+
+        updated_item = ItemResponse(id=item_id, **item.model_dump())
+        self._items[item_id] = updated_item
+        return updated_item
 
     def delete(self, item_id: int) -> bool:
         if item_id in self._items:
